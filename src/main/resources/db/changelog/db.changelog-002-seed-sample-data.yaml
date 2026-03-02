@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-seed-sample-data
+      author: codex
+      changes:
+        - insert:
+            tableName: sample_data
+            columns:
+              - column: { name: name, value: "Sample row 1" }
+              - column: { name: description, value: "Initial sample record" }
+              - column: { name: created_at, valueDate: "2026-03-01T08:00:00" }
+        - insert:
+            tableName: sample_data
+            columns:
+              - column: { name: name, value: "Sample row 2" }
+              - column: { name: description, value: "Sample record for API checks" }
+              - column: { name: created_at, valueDate: "2026-03-01T09:00:00" }
+        - insert:
+            tableName: sample_data
+            columns:
+              - column: { name: name, value: "Sample row 3" }
+              - column: { name: description, value: "Used in thymeleaf table output" }
+              - column: { name: created_at, valueDate: "2026-03-01T10:00:00" }
+        - insert:
+            tableName: sample_data
+            columns:
+              - column: { name: name, value: "Sample row 4" }
+              - column: { name: description, value: "Reference entry for tests" }
+              - column: { name: created_at, valueDate: "2026-03-01T11:00:00" }
+        - insert:
+            tableName: sample_data
+            columns:
+              - column: { name: name, value: "Sample row 5" }
+              - column: { name: description, value: "Final seeded row" }
+              - column: { name: created_at, valueDate: "2026-03-01T12:00:00" }

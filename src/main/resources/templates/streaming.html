@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenSample - Streaming</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="layout">
+    <header class="hero">
+        <h1>Streaming</h1>
+        <p>Placeholder fuer kommende Streaming-Features.</p>
+    </header>
+
+    <div th:replace="~{fragments/tabs :: mainTabs(${activeTab})}"></div>
+
+    <section class="panel fade-in">
+        <h2>Noch leer</h2>
+        <p>Hier kann spaeter Streaming-Logik und Visualisierung integriert werden.</p>
+    </section>
+</main>
+</body>
+</html>

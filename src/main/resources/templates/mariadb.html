@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenSample - MariaDB</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="layout">
+    <header class="hero">
+        <h1>MariaDB Daten</h1>
+        <p>Die Tabelle wird aus der Datenbank gelesen (Liquibase Seed-Daten).</p>
+    </header>
+
+    <div th:replace="~{fragments/tabs :: mainTabs(${activeTab})}"></div>
+
+    <section class="panel fade-in">
+        <h2>Sample Data</h2>
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Created At</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${items}">
+                <td th:text="${item.id}"></td>
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.description}"></td>
+                <td th:text="${item.createdAt}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
