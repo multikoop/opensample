@@ -12,7 +12,8 @@ Beispielanwendung mit:
 
 ## Features
 
-- Liquibase fuehrt beim ersten Start die Migrationen aus.
+- Anwendung startet auch dann, wenn MariaDB noch nicht erreichbar ist.
+- Liquibase-Migration wird manuell gestartet (API oder Startseiten-Button).
 - Datenmodell `sample_data` mit 5 Seed-Datensaetzen.
 - Thymeleaf Startseite mit zentral wiederverwendbarer Tab-Komponente.
 - Tabs:
@@ -28,6 +29,8 @@ Beispielanwendung mit:
   - JSON: `/v3/api-docs`
   - YAML: `/v3/api-docs.yaml`
   - UI: `/swagger-ui.html`
+- Admin API:
+  - `POST /api/v1/admin/db/migrate` startet Liquibase-Migration manuell
 
 ## Datenmodell
 
@@ -64,6 +67,12 @@ export DB_USER=opensample
 export DB_PASSWORD=opensample
 
 mvn spring-boot:run
+```
+
+Danach (falls DB erst spaeter gestartet wurde) Migration ausloesen:
+
+```bash
+curl -X POST http://localhost:8080/api/v1/admin/db/migrate
 ```
 
 App URLs:

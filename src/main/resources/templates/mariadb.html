@@ -17,6 +17,7 @@
 
     <section class="panel fade-in">
         <h2>Sample Data</h2>
+        <p th:if="${dbError}" class="inline-error" th:text="${dbError}"></p>
         <table class="data-table">
             <thead>
             <tr>
@@ -32,6 +33,9 @@
                 <td th:text="${item.name}"></td>
                 <td th:text="${item.description}"></td>
                 <td th:text="${item.createdAt}"></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(items)}">
+                <td colspan="4">Keine Daten verfuegbar.</td>
             </tr>
             </tbody>
         </table>

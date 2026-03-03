@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Controller
 public class PageController {
 
@@ -24,9 +26,14 @@ public class PageController {
 
     @GetMapping("/mariadb")
     public String mariadb(Model model) {
-        PagedResponse<SampleDataResponse> result = sampleDataService.findAll(0, 100);
         model.addAttribute("activeTab", "mariadb");
-        model.addAttribute("items", result.items());
+        try {
+            PagedResponse<SampleDataResponse> result = sampleDataService.findAll(0, 100);
+            model.addAttribute("items", result.items());
+        } catch (RuntimeException exception) {
+            model.addAttribute("items", List.of());
+            model.addAttribute("dbError", "Datenbank nicht erreichbar oder Migration noch nicht ausgefuehrt.");
+        }
         return "mariadb";
     }
 

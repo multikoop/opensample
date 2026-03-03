@@ -20,7 +20,45 @@
         <p>Diese Seite dient als Einstieg. Weitere geplante Tabs: S3, Cassandra, Kafka.</p>
         <p>API: <a href="/api/v1/sample-data">/api/v1/sample-data</a></p>
         <p>OpenAPI: <a href="/swagger-ui.html">/swagger-ui.html</a> oder <a href="/v3/api-docs.yaml">/v3/api-docs.yaml</a></p>
+        <div class="migration-tools">
+            <button id="run-migration-btn" class="primary-button" type="button">Liquibase Migration starten</button>
+            <p id="migration-status" class="migration-status">Status: noch nicht gestartet.</p>
+            <p>API Endpoint: <code>POST /api/v1/admin/db/migrate</code></p>
+        </div>
     </section>
 </main>
+<script>
+    (() => {
+        const button = document.getElementById("run-migration-btn");
+        const status = document.getElementById("migration-status");
+        if (!button || !status) {
+            return;
+        }
+
+        button.addEventListener("click", async () => {
+            button.disabled = true;
+            status.className = "migration-status";
+            status.textContent = "Status: Migration laeuft...";
+
+            try {
+                const response = await fetch("/api/v1/admin/db/migrate", { method: "POST" });
+                const body = await response.json().catch(() => ({}));
+                if (response.ok) {
+                    status.className = "migration-status success";
+                    status.textContent = "Status: " + (body.message || "Migration erfolgreich abgeschlossen.");
+                } else {
+                    const detail = body.detail || body.message || "Migration fehlgeschlagen.";
+                    status.className = "migration-status error";
+                    status.textContent = "Status: Fehler (" + response.status + ") - " + detail;
+                }
+            } catch (error) {
+                status.className = "migration-status error";
+                status.textContent = "Status: API nicht erreichbar.";
+            } finally {
+                button.disabled = false;
+            }
+        });
+    })();
+</script>
 </body>
 </html>
