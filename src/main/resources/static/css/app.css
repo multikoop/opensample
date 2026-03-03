@@ -1,12 +1,12 @@
 :root {
-    --bg: oklch(0.97 0.015 240);
-    --bg-accent: oklch(0.92 0.03 210);
-    --panel: oklch(1 0 0 / 0.8);
-    --text: oklch(0.22 0.02 250);
-    --muted: oklch(0.52 0.02 250);
-    --brand: oklch(0.58 0.16 210);
-    --brand-soft: oklch(0.88 0.05 210);
-    --border: oklch(0.85 0.02 240);
+    --bg: oklch(0.96 0.004 255);
+    --bg-accent: oklch(0.93 0.008 250);
+    --panel: oklch(1 0 0);
+    --text: oklch(0.26 0.012 255);
+    --muted: oklch(0.5 0.01 255);
+    --brand: oklch(0.56 0.07 250);
+    --brand-soft: oklch(0.93 0.018 250);
+    --border: oklch(0.88 0.006 255);
     --radius: 14px;
 }
 
@@ -19,8 +19,8 @@ body {
     font-family: "Trebuchet MS", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     color: var(--text);
     background:
-            radial-gradient(1200px 600px at -10% -20%, var(--bg-accent), transparent 65%),
-            radial-gradient(1000px 400px at 120% -10%, oklch(0.9 0.08 120), transparent 60%),
+            radial-gradient(900px 420px at -10% -20%, var(--bg-accent), transparent 70%),
+            linear-gradient(180deg, var(--bg-accent) 0%, var(--bg) 260px, var(--bg) 100%),
             var(--bg);
     min-height: 100vh;
 }
@@ -52,27 +52,26 @@ body {
 .tab-link {
     text-decoration: none;
     color: var(--text);
-    background: var(--brand-soft);
-    border: 1px solid transparent;
+    background: var(--panel);
+    border: 1px solid var(--border);
     border-radius: 999px;
     padding: 0.55rem 1rem;
     transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
 }
 
 .tab-link:hover {
-    transform: translateY(-1px);
+    background: var(--brand-soft);
     border-color: var(--brand);
 }
 
 .tab-link.active {
-    background: white;
+    background: var(--brand-soft);
     border-color: var(--brand);
-    box-shadow: 0 8px 26px oklch(0.3 0.05 250 / 0.12);
+    box-shadow: 0 3px 12px oklch(0.3 0.02 250 / 0.08);
 }
 
 .panel {
     background: var(--panel);
-    backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 1rem;
