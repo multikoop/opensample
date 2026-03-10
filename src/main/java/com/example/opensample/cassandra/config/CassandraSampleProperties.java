@@ -1,4 +1,4 @@
-package com.example.opensample.config;
+package com.example.opensample.cassandra.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

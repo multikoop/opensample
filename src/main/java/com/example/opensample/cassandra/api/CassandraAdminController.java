@@ -1,8 +1,8 @@
-package com.example.opensample.api;
+package com.example.opensample.cassandra.api;
 
 import com.example.opensample.api.dto.MigrationRunResponse;
-import com.example.opensample.service.CassandraSampleDataService;
-import com.example.opensample.service.CassandraSeedAlreadyRunningException;
+import com.example.opensample.cassandra.service.CassandraSampleDataService;
+import com.example.opensample.cassandra.service.CassandraSeedAlreadyRunningException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

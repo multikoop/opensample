@@ -1,4 +1,4 @@
-package com.example.opensample.config;
+package com.example.opensample.mariadb.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;

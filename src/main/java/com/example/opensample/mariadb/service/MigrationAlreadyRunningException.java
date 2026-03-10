@@ -1,4 +1,4 @@
-package com.example.opensample.service;
+package com.example.opensample.mariadb.service;
 
 public class MigrationAlreadyRunningException extends RuntimeException {
 

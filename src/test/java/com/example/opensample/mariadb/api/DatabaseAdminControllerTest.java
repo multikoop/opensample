@@ -1,7 +1,7 @@
-package com.example.opensample.api;
+package com.example.opensample.mariadb.api;
 
-import com.example.opensample.service.LiquibaseMigrationService;
-import com.example.opensample.service.MigrationAlreadyRunningException;
+import com.example.opensample.mariadb.service.LiquibaseMigrationService;
+import com.example.opensample.mariadb.service.MigrationAlreadyRunningException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

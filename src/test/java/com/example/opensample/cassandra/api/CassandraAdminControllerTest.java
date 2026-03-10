@@ -1,7 +1,7 @@
-package com.example.opensample.api;
+package com.example.opensample.cassandra.api;
 
-import com.example.opensample.service.CassandraSampleDataService;
-import com.example.opensample.service.CassandraSeedAlreadyRunningException;
+import com.example.opensample.cassandra.service.CassandraSampleDataService;
+import com.example.opensample.cassandra.service.CassandraSeedAlreadyRunningException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

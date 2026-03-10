@@ -1,4 +1,4 @@
-package com.example.opensample.service;
+package com.example.opensample.mariadb.service;
 
 import liquibase.exception.LiquibaseException;
 import liquibase.integration.spring.SpringLiquibase;

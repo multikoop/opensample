@@ -124,3 +124,9 @@ mvn test
 Die Tab-Navigation ist zentral als Thymeleaf-Fragment angelegt (`templates/fragments/tabs.html`) und kann fuer weitere Bereiche erweitert werden, z. B.:
 - S3
 - Kafka
+
+## Code-Struktur (kurz)
+
+- Neue Themen werden als eigenes Feature-Modul unter `com.example.opensample.<feature>.*` angelegt (z. B. `cassandra`, `mariadb`).
+- Nur fachlich neutrale, geteilte Bausteine bleiben im Root-Namespace `com.example.opensample.*`.
+- Details und verbindliche Regeln stehen in `AGENTS.md`.

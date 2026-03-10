@@ -1,4 +1,4 @@
-package com.example.opensample.service;
+package com.example.opensample.cassandra.service;
 
 import com.datastax.oss.driver.api.core.AllNodesFailedException;
 import com.datastax.oss.driver.api.core.CqlSession;
@@ -7,8 +7,8 @@ import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
-import com.example.opensample.api.dto.CassandraSampleDataResponse;
-import com.example.opensample.config.CassandraSampleProperties;
+import com.example.opensample.cassandra.api.dto.CassandraSampleDataResponse;
+import com.example.opensample.cassandra.config.CassandraSampleProperties;
 import org.springframework.stereotype.Service;
 
 import java.net.InetSocketAddress;

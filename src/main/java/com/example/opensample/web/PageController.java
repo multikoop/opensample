@@ -2,7 +2,7 @@ package com.example.opensample.web;
 
 import com.example.opensample.api.dto.PagedResponse;
 import com.example.opensample.api.dto.SampleDataResponse;
-import com.example.opensample.service.CassandraSampleDataService;
+import com.example.opensample.cassandra.service.CassandraSampleDataService;
 import com.example.opensample.service.SampleDataService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,4 +1,4 @@
-package com.example.opensample.api.dto;
+package com.example.opensample.cassandra.api.dto;
 
 import java.time.LocalDateTime;
 

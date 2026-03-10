@@ -1,8 +1,8 @@
-package com.example.opensample.api;
+package com.example.opensample.mariadb.api;
 
 import com.example.opensample.api.dto.MigrationRunResponse;
-import com.example.opensample.service.LiquibaseMigrationService;
-import com.example.opensample.service.MigrationAlreadyRunningException;
+import com.example.opensample.mariadb.service.LiquibaseMigrationService;
+import com.example.opensample.mariadb.service.MigrationAlreadyRunningException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

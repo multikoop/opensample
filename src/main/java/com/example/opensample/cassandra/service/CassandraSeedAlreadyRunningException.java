@@ -1,4 +1,4 @@
-package com.example.opensample.service;
+package com.example.opensample.cassandra.service;
 
 public class CassandraSeedAlreadyRunningException extends RuntimeException {
 
