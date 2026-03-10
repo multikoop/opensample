@@ -14,7 +14,7 @@ public class OpenApiConfig {
     public OpenAPI openAPI() {
         return new OpenAPI().info(new Info()
                 .title("OpenSample API")
-                .description("Sample API for sample data backed by MariaDB and Liquibase")
+                .description("Sample API for data examples backed by MariaDB, Liquibase and Cassandra")
                 .version("v1")
                 .contact(new Contact().name("OpenSample Team"))
                 .license(new License().name("Apache-2.0"))

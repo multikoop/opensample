@@ -10,53 +10,80 @@
 <main class="layout">
     <header class="hero">
         <h1>OpenSample</h1>
-        <p>Spring Boot 3.4.3 with MariaDB, Liquibase, Thymeleaf, REST and OpenAPI.</p>
+        <p>Spring Boot 3.4.3 with MariaDB, Cassandra, Thymeleaf, REST and OpenAPI.</p>
     </header>
 
     <div th:replace="~{fragments/tabs :: mainTabs(${activeTab})}"></div>
 
     <section class="panel fade-in">
         <h2>Startseite</h2>
-        <p>Diese Seite dient als Einstieg. Weitere geplante Tabs: S3, Cassandra, Kafka.</p>
+        <p>Diese Seite dient als Einstieg. Weitere geplante Tabs: S3 und Kafka.</p>
         <p>API: <a href="/api/v1/sample-data">/api/v1/sample-data</a></p>
         <p>OpenAPI: <a href="/swagger-ui.html">/swagger-ui.html</a> oder <a href="/v3/api-docs.yaml">/v3/api-docs.yaml</a></p>
         <div class="migration-tools">
-            <button id="run-migration-btn" class="primary-button" type="button">Liquibase Migration starten</button>
-            <p id="migration-status" class="migration-status">Status: noch nicht gestartet.</p>
-            <p>API Endpoint: <code>POST /api/v1/admin/db/migrate</code></p>
+            <div class="action-group">
+                <button id="run-migration-btn" class="primary-button" type="button">Liquibase Migration starten</button>
+                <p id="migration-status" class="migration-status">Status: noch nicht gestartet.</p>
+                <p>API Endpoint: <code>POST /api/v1/admin/db/migrate</code></p>
+            </div>
+            <div class="action-group">
+                <button id="run-cassandra-seed-btn" class="primary-button" type="button">Cassandra Beispieldaten anlegen</button>
+                <p id="cassandra-seed-status" class="migration-status">Status: noch nicht gestartet.</p>
+                <p>API Endpoint: <code>POST /api/v1/admin/cassandra/seed</code></p>
+            </div>
         </div>
     </section>
 </main>
 <script>
     (() => {
-        const button = document.getElementById("run-migration-btn");
-        const status = document.getElementById("migration-status");
-        if (!button || !status) {
-            return;
-        }
-
-        button.addEventListener("click", async () => {
-            button.disabled = true;
-            status.className = "migration-status";
-            status.textContent = "Status: Migration laeuft...";
-
-            try {
-                const response = await fetch("/api/v1/admin/db/migrate", { method: "POST" });
-                const body = await response.json().catch(() => ({}));
-                if (response.ok) {
-                    status.className = "migration-status success";
-                    status.textContent = "Status: " + (body.message || "Migration erfolgreich abgeschlossen.");
-                } else {
-                    const detail = body.detail || body.message || "Migration fehlgeschlagen.";
-                    status.className = "migration-status error";
-                    status.textContent = "Status: Fehler (" + response.status + ") - " + detail;
-                }
-            } catch (error) {
-                status.className = "migration-status error";
-                status.textContent = "Status: API nicht erreichbar.";
-            } finally {
-                button.disabled = false;
+        const setupAction = ({ buttonId, statusId, endpoint, inProgressText, successText, failureText }) => {
+            const button = document.getElementById(buttonId);
+            const status = document.getElementById(statusId);
+            if (!button || !status) {
+                return;
             }
+
+            button.addEventListener("click", async () => {
+                button.disabled = true;
+                status.className = "migration-status";
+                status.textContent = inProgressText;
+
+                try {
+                    const response = await fetch(endpoint, { method: "POST" });
+                    const body = await response.json().catch(() => ({}));
+                    if (response.ok) {
+                        status.className = "migration-status success";
+                        status.textContent = "Status: " + (body.message || successText);
+                    } else {
+                        const detail = body.detail || body.message || failureText;
+                        status.className = "migration-status error";
+                        status.textContent = "Status: Fehler (" + response.status + ") - " + detail;
+                    }
+                } catch (error) {
+                    status.className = "migration-status error";
+                    status.textContent = "Status: API nicht erreichbar.";
+                } finally {
+                    button.disabled = false;
+                }
+            });
+        };
+
+        setupAction({
+            buttonId: "run-migration-btn",
+            statusId: "migration-status",
+            endpoint: "/api/v1/admin/db/migrate",
+            inProgressText: "Status: Migration laeuft...",
+            successText: "Migration erfolgreich abgeschlossen.",
+            failureText: "Migration fehlgeschlagen."
+        });
+
+        setupAction({
+            buttonId: "run-cassandra-seed-btn",
+            statusId: "cassandra-seed-status",
+            endpoint: "/api/v1/admin/cassandra/seed",
+            inProgressText: "Status: Cassandra Seed laeuft...",
+            successText: "Cassandra Seed erfolgreich abgeschlossen.",
+            failureText: "Cassandra Seed fehlgeschlagen."
         });
     })();
 </script>

@@ -2,6 +2,7 @@ package com.example.opensample.web;
 
 import com.example.opensample.api.dto.PagedResponse;
 import com.example.opensample.api.dto.SampleDataResponse;
+import com.example.opensample.service.CassandraSampleDataService;
 import com.example.opensample.service.SampleDataService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +14,11 @@ import java.util.List;
 public class PageController {
 
     private final SampleDataService sampleDataService;
+    private final CassandraSampleDataService cassandraSampleDataService;
 
-    public PageController(SampleDataService sampleDataService) {
+    public PageController(SampleDataService sampleDataService, CassandraSampleDataService cassandraSampleDataService) {
         this.sampleDataService = sampleDataService;
+        this.cassandraSampleDataService = cassandraSampleDataService;
     }
 
     @GetMapping("/")
@@ -41,5 +44,17 @@ public class PageController {
     public String streaming(Model model) {
         model.addAttribute("activeTab", "streaming");
         return "streaming";
+    }
+
+    @GetMapping("/cassandra")
+    public String cassandra(Model model) {
+        model.addAttribute("activeTab", "cassandra");
+        try {
+            model.addAttribute("items", cassandraSampleDataService.findAll());
+        } catch (RuntimeException exception) {
+            model.addAttribute("items", List.of());
+            model.addAttribute("dbError", "Cassandra nicht erreichbar oder Seed noch nicht ausgefuehrt.");
+        }
+        return "cassandra";
     }
 }

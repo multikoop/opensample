@@ -4,6 +4,7 @@
 <nav th:fragment="mainTabs(activeTab)" class="tab-nav" aria-label="Main navigation">
     <a class="tab-link" th:classappend="${activeTab == 'home'} ? ' active'" th:href="@{/}">Startseite</a>
     <a class="tab-link" th:classappend="${activeTab == 'mariadb'} ? ' active'" th:href="@{/mariadb}">MariaDB</a>
+    <a class="tab-link" th:classappend="${activeTab == 'cassandra'} ? ' active'" th:href="@{/cassandra}">Cassandra</a>
     <a class="tab-link" th:classappend="${activeTab == 'streaming'} ? ' active'" th:href="@{/streaming}">Streaming</a>
 </nav>
 </body>

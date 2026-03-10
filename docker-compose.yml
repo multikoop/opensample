@@ -19,5 +19,25 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
 
+  cassandra:
+    image: cassandra:${CASSANDRA_VERSION:-5.0}
+    container_name: opensample-cassandra
+    restart: unless-stopped
+    environment:
+      CASSANDRA_CLUSTER_NAME: ${CASSANDRA_CLUSTER_NAME:-OpenSampleCluster}
+      CASSANDRA_DC: ${CASSANDRA_DATACENTER:-datacenter1}
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+    ports:
+      - "${CASSANDRA_PORT:-9042}:9042"
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'describe cluster' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 40s
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+
 volumes:
   mariadb_data:
+  cassandra_data:
