@@ -10,14 +10,14 @@
 <main class="layout">
     <header class="hero">
         <h1>OpenSample</h1>
-        <p>Spring Boot 3.4.3 with MariaDB, Cassandra, Thymeleaf, REST and OpenAPI.</p>
+        <p>Spring Boot 3.4.3 with MariaDB, Cassandra, S3, Kafka, Thymeleaf, REST and OpenAPI.</p>
     </header>
 
     <div th:replace="~{fragments/tabs :: mainTabs(${activeTab})}"></div>
 
     <section class="panel fade-in">
         <h2>Startseite</h2>
-        <p>Diese Seite dient als Einstieg. Der S3-Tab zeigt Dateien aus einem Sample-Bucket.</p>
+        <p>Diese Seite dient als Einstieg. Die Tabs zeigen Beispielinhalte aus S3, Kafka und Datenbanken.</p>
         <p>API: <a href="/api/v1/sample-data">/api/v1/sample-data</a></p>
         <p>OpenAPI: <a href="/swagger-ui.html">/swagger-ui.html</a> oder <a href="/v3/api-docs.yaml">/v3/api-docs.yaml</a></p>
         <div class="migration-tools">
@@ -35,6 +35,11 @@
                 <button id="run-s3-seed-btn" class="primary-button" type="button">S3 Beispieldateien anlegen</button>
                 <p id="s3-seed-status" class="migration-status">Status: noch nicht gestartet.</p>
                 <p>API Endpoint: <code>POST /api/v1/admin/s3/seed</code></p>
+            </div>
+            <div class="action-group">
+                <button id="run-kafka-seed-btn" class="primary-button" type="button">Kafka Beispiel-Events anlegen</button>
+                <p id="kafka-seed-status" class="migration-status">Status: noch nicht gestartet.</p>
+                <p>API Endpoint: <code>POST /api/v1/admin/kafka/seed</code></p>
             </div>
         </div>
     </section>
@@ -98,6 +103,15 @@
             inProgressText: "Status: S3 Seed laeuft...",
             successText: "S3 Seed erfolgreich abgeschlossen.",
             failureText: "S3 Seed fehlgeschlagen."
+        });
+
+        setupAction({
+            buttonId: "run-kafka-seed-btn",
+            statusId: "kafka-seed-status",
+            endpoint: "/api/v1/admin/kafka/seed",
+            inProgressText: "Status: Kafka Seed laeuft...",
+            successText: "Kafka Seed erfolgreich abgeschlossen.",
+            failureText: "Kafka Seed fehlgeschlagen."
         });
     })();
 </script>

@@ -6,6 +6,7 @@ Beispielanwendung mit:
 - MariaDB
 - Cassandra
 - S3 (via LocalStack)
+- Kafka (via Redpanda)
 - Liquibase (Schema + Seeddaten)
 - Thymeleaf
 - REST API + OpenAPI
@@ -18,14 +19,17 @@ Beispielanwendung mit:
 - Liquibase-Migration wird manuell gestartet (API oder Startseiten-Button).
 - Cassandra Schema+Seed wird manuell gestartet (API oder Startseiten-Button).
 - S3 Bucket+Seed wird manuell gestartet (API oder Startseiten-Button).
+- Kafka Topic+Seed wird manuell gestartet (API oder Startseiten-Button).
 - Datenmodell `sample_data` mit 5 Seed-Datensaetzen.
 - S3 Beispieldateien (TXT + PDF) werden in `sample-bucket` hochgeladen.
+- Kafka Beispieldaten werden als 3 JSON-Events in ein Sample-Topic geschrieben.
 - Thymeleaf Startseite mit zentral wiederverwendbarer Tab-Komponente.
 - Tabs:
   - Startseite
   - MariaDB (zeigt tabellarisch DB-Inhalte)
   - Cassandra (zeigt tabellarisch Cassandra-Inhalte)
   - S3 (zeigt Bucket-Objekte und Download-Links)
+  - Kafka (zeigt Topic-Events und Detailansicht je Event)
   - Streaming (aktuell leer)
 - REST API:
   - `GET /api/v1/sample-data`
@@ -40,9 +44,12 @@ Beispielanwendung mit:
   - `POST /api/v1/admin/db/migrate` startet Liquibase-Migration manuell
   - `POST /api/v1/admin/cassandra/seed` erstellt Cassandra Keyspace/Tabelle und Seed-Daten
   - `POST /api/v1/admin/s3/seed` erstellt S3 Bucket und laedt 2 Beispieldateien hoch
+  - `POST /api/v1/admin/kafka/seed` erstellt Kafka Topic und publiziert 3 Beispiel-Events
 - S3 API:
   - `GET /api/v1/s3/objects` listet Objekte aus dem Sample-Bucket
   - `GET /api/v1/s3/objects/download?key=<object-key>` laedt ein Objekt herunter
+- Kafka API:
+  - `GET /api/v1/kafka/events` listet Events aus dem Sample-Topic
 
 ## Datenmodell
 
@@ -68,16 +75,20 @@ S3 Seed ist als einfacher Lauf ohne State-Tracking implementiert:
   - `sample-note.txt`
   - `sample-guide.pdf`
 
+Kafka Seed ist als einfacher Lauf ohne State-Tracking implementiert:
+- Topic `sample-account-events` (konfigurierbar via `KAFKA_TOPIC`)
+- 3 JSON-Events vom Typ `AccountFreigeschaltet`
+
 ## Voraussetzungen
 
 - `JAVA_HOME=/opt/homebrew/opt/openjdk@21`
 - Docker CLI + Docker Daemon
 - Maven
 
-## Lokal starten (MariaDB + Cassandra + S3/LocalStack via Docker Compose)
+## Lokal starten (MariaDB + Cassandra + S3/LocalStack + Kafka/Redpanda via Docker Compose)
 
 ```bash
-docker compose up -d mariadb cassandra localstack
+docker compose up -d mariadb cassandra localstack redpanda
 
 export JAVA_HOME=/opt/homebrew/opt/openjdk@21
 export PATH="$JAVA_HOME/bin:$PATH"
@@ -103,6 +114,15 @@ export S3_SECRET_KEY=test
 export S3_BUCKET=sample-bucket
 export S3_SEED_FILES_DIRECTORY=src/test/resources/s3/sample-bucket
 
+# Optional Kafka overrides (Redpanda)
+export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
+export KAFKA_TOPIC=sample-account-events
+export KAFKA_TOPIC_PARTITIONS=1
+export KAFKA_TOPIC_REPLICATION_FACTOR=1
+export KAFKA_REQUEST_TIMEOUT_MS=5000
+export KAFKA_POLL_TIMEOUT_MS=700
+export KAFKA_MAX_EVENTS=250
+
 mvn spring-boot:run
 ```
 
@@ -112,6 +132,7 @@ Danach (falls DB spaeter gestartet wurde) Migration/Seed manuell ausloesen:
 curl -X POST http://localhost:8080/api/v1/admin/db/migrate
 curl -X POST http://localhost:8080/api/v1/admin/cassandra/seed
 curl -X POST http://localhost:8080/api/v1/admin/s3/seed
+curl -X POST http://localhost:8080/api/v1/admin/kafka/seed
 ```
 
 App URLs:
@@ -119,6 +140,7 @@ App URLs:
 - `http://localhost:8080/mariadb`
 - `http://localhost:8080/cassandra`
 - `http://localhost:8080/s3`
+- `http://localhost:8080/kafka`
 - `http://localhost:8080/streaming`
 - `http://localhost:8080/swagger-ui.html`
 
@@ -145,8 +167,7 @@ mvn test
 
 ## Geplanter Ausbau
 
-Die Tab-Navigation ist zentral als Thymeleaf-Fragment angelegt (`templates/fragments/tabs.html`) und kann fuer weitere Bereiche erweitert werden, z. B.:
-- Kafka
+Die Tab-Navigation ist zentral als Thymeleaf-Fragment angelegt (`templates/fragments/tabs.html`) und kann fuer weitere Bereiche erweitert werden (z. B. weitere Streaming- oder Queue-Beispiele).
 
 ## Code-Struktur (kurz)
 

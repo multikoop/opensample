@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenSample - Kafka</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="layout">
+    <header class="hero">
+        <h1>Kafka Events</h1>
+        <p>Zeigt Events aus dem konfigurierten Sample-Topic. Per Klick werden Details angezeigt.</p>
+    </header>
+
+    <div th:replace="~{fragments/tabs :: mainTabs(${activeTab})}"></div>
+
+    <section class="panel fade-in">
+        <h2>Sample Topic Events</h2>
+        <p th:if="${dbError}" class="inline-error" th:text="${dbError}"></p>
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>Key</th>
+                <th>Value (JSON)</th>
+                <th>Timestamp (UTC)</th>
+                <th>Aktion</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${items}">
+                <td th:text="${item.key}"></td>
+                <td><span class="truncate-cell" th:text="${item.value}"></span></td>
+                <td th:text="${item.timestamp}"></td>
+                <td>
+                    <button
+                            class="table-action-button"
+                            type="button"
+                            th:attr="data-topic=${item.topic},data-partition=${item.partition},data-offset=${item.offset},data-key=${item.key},data-value=${item.value},data-timestamp=${item.timestamp}">
+                        Details
+                    </button>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(items)}">
+                <td colspan="4">Keine Events verfuegbar.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="details-panel">
+            <h3>Event-Details</h3>
+            <p id="kafka-detail-placeholder" class="migration-status">Bitte ein Event ueber "Details" auswaehlen.</p>
+            <dl id="kafka-detail-content" class="detail-list" hidden>
+                <dt>Topic</dt>
+                <dd id="kafka-detail-topic"></dd>
+                <dt>Partition</dt>
+                <dd id="kafka-detail-partition"></dd>
+                <dt>Offset</dt>
+                <dd id="kafka-detail-offset"></dd>
+                <dt>Key</dt>
+                <dd id="kafka-detail-key"></dd>
+                <dt>Timestamp (UTC)</dt>
+                <dd id="kafka-detail-timestamp"></dd>
+                <dt>Value</dt>
+                <dd><pre id="kafka-detail-value" class="json-preview"></pre></dd>
+            </dl>
+        </div>
+    </section>
+</main>
+<script>
+    (() => {
+        const buttons = document.querySelectorAll(".table-action-button");
+        const placeholder = document.getElementById("kafka-detail-placeholder");
+        const detailContent = document.getElementById("kafka-detail-content");
+        const topic = document.getElementById("kafka-detail-topic");
+        const partition = document.getElementById("kafka-detail-partition");
+        const offset = document.getElementById("kafka-detail-offset");
+        const key = document.getElementById("kafka-detail-key");
+        const timestamp = document.getElementById("kafka-detail-timestamp");
+        const value = document.getElementById("kafka-detail-value");
+
+        buttons.forEach((button) => {
+            button.addEventListener("click", () => {
+                topic.textContent = button.dataset.topic || "-";
+                partition.textContent = button.dataset.partition || "-";
+                offset.textContent = button.dataset.offset || "-";
+                key.textContent = button.dataset.key || "-";
+                timestamp.textContent = button.dataset.timestamp || "-";
+                value.textContent = button.dataset.value || "";
+                placeholder.hidden = true;
+                detailContent.hidden = false;
+            });
+        });
+    })();
+</script>
+</body>
+</html>

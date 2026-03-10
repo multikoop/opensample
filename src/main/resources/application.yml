@@ -47,3 +47,11 @@ app:
     path-style-access-enabled: ${S3_PATH_STYLE_ACCESS_ENABLED:true}
     request-timeout-ms: ${S3_REQUEST_TIMEOUT_MS:5000}
     seed-files-directory: ${S3_SEED_FILES_DIRECTORY:src/test/resources/s3/sample-bucket}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    topic: ${KAFKA_TOPIC:sample-account-events}
+    partitions: ${KAFKA_TOPIC_PARTITIONS:1}
+    replication-factor: ${KAFKA_TOPIC_REPLICATION_FACTOR:1}
+    request-timeout-ms: ${KAFKA_REQUEST_TIMEOUT_MS:5000}
+    poll-timeout-ms: ${KAFKA_POLL_TIMEOUT_MS:700}
+    max-events: ${KAFKA_MAX_EVENTS:250}
