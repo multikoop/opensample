@@ -156,6 +156,20 @@ body {
     font-size: 0.9rem;
 }
 
+.table-action-link {
+    text-decoration: none;
+    color: var(--brand);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.3rem 0.55rem;
+    transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.table-action-link:hover {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+}
+
 .fade-in {
     animation: fade-in 360ms ease-out;
 }

@@ -1,0 +1,4 @@
+OpenSample S3 seed file
+-----------------------
+Diese Datei wird ueber den Startseiten-Button in den Sample-Bucket hochgeladen.
+Sie dient als einfaches TXT-Beispiel fuer lokale Downloads.

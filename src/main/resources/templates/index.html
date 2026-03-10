@@ -17,7 +17,7 @@
 
     <section class="panel fade-in">
         <h2>Startseite</h2>
-        <p>Diese Seite dient als Einstieg. Weitere geplante Tabs: S3 und Kafka.</p>
+        <p>Diese Seite dient als Einstieg. Der S3-Tab zeigt Dateien aus einem Sample-Bucket.</p>
         <p>API: <a href="/api/v1/sample-data">/api/v1/sample-data</a></p>
         <p>OpenAPI: <a href="/swagger-ui.html">/swagger-ui.html</a> oder <a href="/v3/api-docs.yaml">/v3/api-docs.yaml</a></p>
         <div class="migration-tools">
@@ -30,6 +30,11 @@
                 <button id="run-cassandra-seed-btn" class="primary-button" type="button">Cassandra Beispieldaten anlegen</button>
                 <p id="cassandra-seed-status" class="migration-status">Status: noch nicht gestartet.</p>
                 <p>API Endpoint: <code>POST /api/v1/admin/cassandra/seed</code></p>
+            </div>
+            <div class="action-group">
+                <button id="run-s3-seed-btn" class="primary-button" type="button">S3 Beispieldateien anlegen</button>
+                <p id="s3-seed-status" class="migration-status">Status: noch nicht gestartet.</p>
+                <p>API Endpoint: <code>POST /api/v1/admin/s3/seed</code></p>
             </div>
         </div>
     </section>
@@ -84,6 +89,15 @@
             inProgressText: "Status: Cassandra Seed laeuft...",
             successText: "Cassandra Seed erfolgreich abgeschlossen.",
             failureText: "Cassandra Seed fehlgeschlagen."
+        });
+
+        setupAction({
+            buttonId: "run-s3-seed-btn",
+            statusId: "s3-seed-status",
+            endpoint: "/api/v1/admin/s3/seed",
+            inProgressText: "Status: S3 Seed laeuft...",
+            successText: "S3 Seed erfolgreich abgeschlossen.",
+            failureText: "S3 Seed fehlgeschlagen."
         });
     })();
 </script>

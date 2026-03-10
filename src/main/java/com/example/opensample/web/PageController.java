@@ -3,6 +3,7 @@ package com.example.opensample.web;
 import com.example.opensample.api.dto.PagedResponse;
 import com.example.opensample.api.dto.SampleDataResponse;
 import com.example.opensample.cassandra.service.CassandraSampleDataService;
+import com.example.opensample.s3.service.S3SampleDataService;
 import com.example.opensample.service.SampleDataService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,10 +16,16 @@ public class PageController {
 
     private final SampleDataService sampleDataService;
     private final CassandraSampleDataService cassandraSampleDataService;
+    private final S3SampleDataService s3SampleDataService;
 
-    public PageController(SampleDataService sampleDataService, CassandraSampleDataService cassandraSampleDataService) {
+    public PageController(
+            SampleDataService sampleDataService,
+            CassandraSampleDataService cassandraSampleDataService,
+            S3SampleDataService s3SampleDataService
+    ) {
         this.sampleDataService = sampleDataService;
         this.cassandraSampleDataService = cassandraSampleDataService;
+        this.s3SampleDataService = s3SampleDataService;
     }
 
     @GetMapping("/")
@@ -56,5 +63,17 @@ public class PageController {
             model.addAttribute("dbError", "Cassandra nicht erreichbar oder Seed noch nicht ausgefuehrt.");
         }
         return "cassandra";
+    }
+
+    @GetMapping("/s3")
+    public String s3(Model model) {
+        model.addAttribute("activeTab", "s3");
+        try {
+            model.addAttribute("items", s3SampleDataService.listObjects());
+        } catch (RuntimeException exception) {
+            model.addAttribute("items", List.of());
+            model.addAttribute("dbError", "S3 nicht erreichbar oder Seed noch nicht ausgefuehrt.");
+        }
+        return "s3";
     }
 }

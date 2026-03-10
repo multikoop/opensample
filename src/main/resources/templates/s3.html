@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenSample - S3</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="layout">
+    <header class="hero">
+        <h1>S3 Daten</h1>
+        <p>Zeigt Dateien aus dem konfigurierten Sample-Bucket und erlaubt den Download.</p>
+    </header>
+
+    <div th:replace="~{fragments/tabs :: mainTabs(${activeTab})}"></div>
+
+    <section class="panel fade-in">
+        <h2>Sample Bucket Objects</h2>
+        <p th:if="${dbError}" class="inline-error" th:text="${dbError}"></p>
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>Object Key</th>
+                <th>Size (Bytes)</th>
+                <th>Last Modified (UTC)</th>
+                <th>Aktion</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${items}">
+                <td th:text="${item.key}"></td>
+                <td th:text="${item.size}"></td>
+                <td th:text="${item.lastModified}"></td>
+                <td>
+                    <a class="table-action-link" th:href="@{/api/v1/s3/objects/download(key=${item.key})}">Download</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(items)}">
+                <td colspan="4">Keine Dateien verfuegbar.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
