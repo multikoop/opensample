@@ -7,6 +7,7 @@ Beispielanwendung mit:
 - Cassandra
 - S3 (via LocalStack)
 - Kafka (via Redpanda)
+- OpenSearch
 - Liquibase (Schema + Seeddaten)
 - Thymeleaf
 - REST API + OpenAPI
@@ -20,9 +21,11 @@ Beispielanwendung mit:
 - Cassandra Schema+Seed wird manuell gestartet (API oder Startseiten-Button).
 - S3 Bucket+Seed wird manuell gestartet (API oder Startseiten-Button).
 - Kafka Topic+Seed wird manuell gestartet (API oder Startseiten-Button).
+- OpenSearch Index+Seed wird manuell gestartet (API oder Startseiten-Button).
 - Datenmodell `sample_data` mit 5 Seed-Datensaetzen.
 - S3 Beispieldateien (TXT + PDF) werden in `sample-bucket` hochgeladen.
 - Kafka Beispieldaten werden als 3 JSON-Events in ein Sample-Topic geschrieben.
+- OpenSearch Beispieldaten werden als 3 JSON-Dokumente in `sample-index` geschrieben.
 - Thymeleaf Startseite mit zentral wiederverwendbarer Tab-Komponente.
 - Tabs:
   - Startseite
@@ -30,6 +33,7 @@ Beispielanwendung mit:
   - Cassandra (zeigt tabellarisch Cassandra-Inhalte)
   - S3 (zeigt Bucket-Objekte und Download-Links)
   - Kafka (zeigt Topic-Events und Detailansicht je Event)
+  - OpenSearch (zeigt Index-Dokumente und Detailansicht je Dokument)
   - Streaming (aktuell leer)
 - REST API:
   - `GET /api/v1/sample-data`
@@ -45,11 +49,14 @@ Beispielanwendung mit:
   - `POST /api/v1/admin/cassandra/seed` erstellt Cassandra Keyspace/Tabelle und Seed-Daten
   - `POST /api/v1/admin/s3/seed` erstellt S3 Bucket und laedt 2 Beispieldateien hoch
   - `POST /api/v1/admin/kafka/seed` erstellt Kafka Topic und publiziert 3 Beispiel-Events
+  - `POST /api/v1/admin/opensearch/seed` erstellt OpenSearch Index und schreibt 3 Beispiel-Dokumente
 - S3 API:
   - `GET /api/v1/s3/objects` listet Objekte aus dem Sample-Bucket
   - `GET /api/v1/s3/objects/download?key=<object-key>` laedt ein Objekt herunter
 - Kafka API:
   - `GET /api/v1/kafka/events` listet Events aus dem Sample-Topic
+- OpenSearch API:
+  - `GET /api/v1/opensearch/documents` listet Dokumente aus dem Sample-Index
 
 ## Datenmodell
 
@@ -79,16 +86,23 @@ Kafka Seed ist als einfacher Lauf ohne State-Tracking implementiert:
 - Topic `sample-account-events` (konfigurierbar via `KAFKA_TOPIC`)
 - 3 JSON-Events vom Typ `AccountFreigeschaltet`
 
+OpenSearch Seed ist als einfacher Lauf ohne State-Tracking implementiert:
+- Index `sample-index` (konfigurierbar via `OPENSEARCH_INDEX`)
+- 3 JSON-Dokumente: `Stellengesuch`, `Berufsinformationen`, `Praktikum`
+
 ## Voraussetzungen
 
 - `JAVA_HOME=/opt/homebrew/opt/openjdk@21`
 - Docker CLI + Docker Daemon
 - Maven
 
-## Lokal starten (MariaDB + Cassandra + S3/LocalStack + Kafka/Redpanda via Docker Compose)
+## Lokal starten (MariaDB + Cassandra + S3/LocalStack + Kafka/Redpanda + OpenSearch via Docker Compose)
 
 ```bash
-docker compose up -d mariadb cassandra localstack redpanda
+docker compose up -d mariadb cassandra localstack redpanda opensearch
+
+# Optional mit OpenSearch Dashboards
+# docker compose up -d opensearch-dashboards
 
 export JAVA_HOME=/opt/homebrew/opt/openjdk@21
 export PATH="$JAVA_HOME/bin:$PATH"
@@ -123,6 +137,12 @@ export KAFKA_REQUEST_TIMEOUT_MS=5000
 export KAFKA_POLL_TIMEOUT_MS=700
 export KAFKA_MAX_EVENTS=250
 
+# Optional OpenSearch overrides
+export OPENSEARCH_ENDPOINT=http://localhost:9200
+export OPENSEARCH_INDEX=sample-index
+export OPENSEARCH_REQUEST_TIMEOUT_MS=5000
+export OPENSEARCH_MAX_DOCUMENTS=250
+
 mvn spring-boot:run
 ```
 
@@ -133,6 +153,7 @@ curl -X POST http://localhost:8080/api/v1/admin/db/migrate
 curl -X POST http://localhost:8080/api/v1/admin/cassandra/seed
 curl -X POST http://localhost:8080/api/v1/admin/s3/seed
 curl -X POST http://localhost:8080/api/v1/admin/kafka/seed
+curl -X POST http://localhost:8080/api/v1/admin/opensearch/seed
 ```
 
 App URLs:
@@ -141,8 +162,10 @@ App URLs:
 - `http://localhost:8080/cassandra`
 - `http://localhost:8080/s3`
 - `http://localhost:8080/kafka`
+- `http://localhost:8080/opensearch`
 - `http://localhost:8080/streaming`
 - `http://localhost:8080/swagger-ui.html`
+- `http://localhost:5601` (optional OpenSearch Dashboards)
 
 ## Tests
 

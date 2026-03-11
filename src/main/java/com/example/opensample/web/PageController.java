@@ -4,6 +4,7 @@ import com.example.opensample.api.dto.PagedResponse;
 import com.example.opensample.api.dto.SampleDataResponse;
 import com.example.opensample.cassandra.service.CassandraSampleDataService;
 import com.example.opensample.kafka.service.KafkaSampleDataService;
+import com.example.opensample.opensearch.service.OpenSearchSampleDataService;
 import com.example.opensample.s3.service.S3SampleDataService;
 import com.example.opensample.service.SampleDataService;
 import org.springframework.stereotype.Controller;
@@ -19,17 +20,20 @@ public class PageController {
     private final CassandraSampleDataService cassandraSampleDataService;
     private final S3SampleDataService s3SampleDataService;
     private final KafkaSampleDataService kafkaSampleDataService;
+    private final OpenSearchSampleDataService openSearchSampleDataService;
 
     public PageController(
             SampleDataService sampleDataService,
             CassandraSampleDataService cassandraSampleDataService,
             S3SampleDataService s3SampleDataService,
-            KafkaSampleDataService kafkaSampleDataService
+            KafkaSampleDataService kafkaSampleDataService,
+            OpenSearchSampleDataService openSearchSampleDataService
     ) {
         this.sampleDataService = sampleDataService;
         this.cassandraSampleDataService = cassandraSampleDataService;
         this.s3SampleDataService = s3SampleDataService;
         this.kafkaSampleDataService = kafkaSampleDataService;
+        this.openSearchSampleDataService = openSearchSampleDataService;
     }
 
     @GetMapping("/")
@@ -91,5 +95,17 @@ public class PageController {
             model.addAttribute("dbError", "Kafka nicht erreichbar oder Seed noch nicht ausgefuehrt.");
         }
         return "kafka";
+    }
+
+    @GetMapping("/opensearch")
+    public String opensearch(Model model) {
+        model.addAttribute("activeTab", "opensearch");
+        try {
+            model.addAttribute("items", openSearchSampleDataService.listDocuments());
+        } catch (RuntimeException exception) {
+            model.addAttribute("items", List.of());
+            model.addAttribute("dbError", "OpenSearch nicht erreichbar oder Seed noch nicht ausgefuehrt.");
+        }
+        return "opensearch";
     }
 }

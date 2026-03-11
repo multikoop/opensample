@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenSample - OpenSearch</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="layout">
+    <header class="hero">
+        <h1>OpenSearch Dokumente</h1>
+        <p>Zeigt Dokumente aus dem konfigurierten Sample-Index. Per Klick werden Details angezeigt.</p>
+    </header>
+
+    <div th:replace="~{fragments/tabs :: mainTabs(${activeTab})}"></div>
+
+    <section class="panel fade-in">
+        <h2>Sample Index Dokumente</h2>
+        <p th:if="${dbError}" class="inline-error" th:text="${dbError}"></p>
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>Index</th>
+                <th>ID</th>
+                <th>Titel</th>
+                <th>Score</th>
+                <th>Timestamp (UTC)</th>
+                <th>Aktion</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${items}">
+                <td th:text="${item.index}"></td>
+                <td th:text="${item.id}"></td>
+                <td><span class="truncate-cell" th:text="${item.title}"></span></td>
+                <td th:text="${item.score}"></td>
+                <td th:text="${item.timestamp}"></td>
+                <td>
+                    <button
+                            class="table-action-button"
+                            type="button"
+                            th:attr="data-index=${item.index},data-id=${item.id},data-score=${item.score},data-timestamp=${item.timestamp},data-source=${item.sourceJson}">
+                        Details
+                    </button>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(items)}">
+                <td colspan="6">Keine Dokumente verfuegbar.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="details-panel">
+            <h3>Dokument-Details</h3>
+            <p id="opensearch-detail-placeholder" class="migration-status">Bitte ein Dokument ueber "Details" auswaehlen.</p>
+            <dl id="opensearch-detail-content" class="detail-list" hidden>
+                <dt>Index</dt>
+                <dd id="opensearch-detail-index"></dd>
+                <dt>ID</dt>
+                <dd id="opensearch-detail-id"></dd>
+                <dt>Score</dt>
+                <dd id="opensearch-detail-score"></dd>
+                <dt>Timestamp (UTC)</dt>
+                <dd id="opensearch-detail-timestamp"></dd>
+                <dt>Source (JSON)</dt>
+                <dd><pre id="opensearch-detail-source" class="json-preview"></pre></dd>
+            </dl>
+        </div>
+    </section>
+</main>
+<script>
+    (() => {
+        const buttons = document.querySelectorAll(".table-action-button");
+        const placeholder = document.getElementById("opensearch-detail-placeholder");
+        const detailContent = document.getElementById("opensearch-detail-content");
+        const index = document.getElementById("opensearch-detail-index");
+        const id = document.getElementById("opensearch-detail-id");
+        const score = document.getElementById("opensearch-detail-score");
+        const timestamp = document.getElementById("opensearch-detail-timestamp");
+        const source = document.getElementById("opensearch-detail-source");
+
+        buttons.forEach((button) => {
+            button.addEventListener("click", () => {
+                index.textContent = button.dataset.index || "-";
+                id.textContent = button.dataset.id || "-";
+                score.textContent = button.dataset.score || "-";
+                timestamp.textContent = button.dataset.timestamp || "-";
+                source.textContent = button.dataset.source || "";
+                placeholder.hidden = true;
+                detailContent.hidden = false;
+            });
+        });
+    })();
+</script>
+</body>
+</html>

@@ -55,3 +55,8 @@ app:
     request-timeout-ms: ${KAFKA_REQUEST_TIMEOUT_MS:5000}
     poll-timeout-ms: ${KAFKA_POLL_TIMEOUT_MS:700}
     max-events: ${KAFKA_MAX_EVENTS:250}
+  opensearch:
+    endpoint: ${OPENSEARCH_ENDPOINT:http://localhost:9200}
+    index: ${OPENSEARCH_INDEX:sample-index}
+    request-timeout-ms: ${OPENSEARCH_REQUEST_TIMEOUT_MS:5000}
+    max-documents: ${OPENSEARCH_MAX_DOCUMENTS:250}
