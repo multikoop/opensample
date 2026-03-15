@@ -143,6 +143,8 @@ export OPENSEARCH_ENDPOINT=http://localhost:9200
 export OPENSEARCH_INDEX=sample-index
 export OPENSEARCH_REQUEST_TIMEOUT_MS=5000
 export OPENSEARCH_MAX_DOCUMENTS=250
+# Seit OpenSearch 2.12+ beim Containerstart erforderlich (auch im Demo-Setup)
+export OPENSEARCH_INITIAL_ADMIN_PASSWORD=OpenSampleAdmin123!
 
 mvn spring-boot:run
 ```
