@@ -27,7 +27,7 @@ class OpenSearchSampleDataControllerTest {
 
     @Test
     void listDocumentsShouldReturnItems() throws Exception {
-        given(openSearchSampleDataService.listDocuments()).willReturn(List.of(
+        given(openSearchSampleDataService.listDocuments("Java")).willReturn(List.of(
                 new OpenSearchSampleDocumentResponse(
                         "sample-index",
                         "stellenangebot-1",
@@ -38,7 +38,7 @@ class OpenSearchSampleDataControllerTest {
                 )
         ));
 
-        mockMvc.perform(get("/api/v1/opensearch/documents"))
+        mockMvc.perform(get("/api/v1/opensearch/documents").queryParam("q", "Java"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].index").value("sample-index"))
                 .andExpect(jsonPath("$[0].id").value("stellenangebot-1"))

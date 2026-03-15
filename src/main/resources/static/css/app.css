@@ -137,6 +137,36 @@ body {
     min-width: 700px;
 }
 
+.table-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
+}
+
+.search-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    min-width: min(460px, 100%);
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 0.45rem 0.6rem;
+    font: inherit;
+    color: var(--text);
+}
+
+.search-input:focus {
+    outline: 2px solid oklch(0.74 0.08 250 / 0.45);
+    outline-offset: 1px;
+}
+
 .data-table th,
 .data-table td {
     text-align: left;
@@ -256,5 +286,15 @@ body {
 
     .detail-list {
         grid-template-columns: 1fr;
+    }
+
+    .search-form {
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .search-input {
+        min-width: 0;
+        width: 100%;
     }
 }

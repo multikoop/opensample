@@ -17,6 +17,22 @@
 
     <section class="panel fade-in">
         <h2>Sample Index Dokumente</h2>
+        <div class="table-toolbar">
+            <form class="search-form" method="get" th:action="@{/opensearch}">
+                <input
+                        id="opensearch-query"
+                        name="q"
+                        class="search-input"
+                        type="search"
+                        placeholder="z. B. Java, Praktikum, Berlin"
+                        th:value="${queryText}">
+                <button class="table-action-button" type="submit">Suchen</button>
+                <a class="table-action-link" th:href="@{/opensearch}">Zuruecksetzen</a>
+            </form>
+            <p class="migration-status" th:if="${queryText != null and !#strings.isEmpty(queryText)}">
+                Aktive Suche: <strong th:text="${queryText}"></strong>
+            </p>
+        </div>
         <p th:if="${dbError}" class="inline-error" th:text="${dbError}"></p>
         <table class="data-table">
             <thead>

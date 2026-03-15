@@ -10,6 +10,7 @@ import com.example.opensample.service.SampleDataService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -98,10 +99,14 @@ public class PageController {
     }
 
     @GetMapping("/opensearch")
-    public String opensearch(Model model) {
+    public String opensearch(
+            @RequestParam(name = "q", required = false) String query,
+            Model model
+    ) {
         model.addAttribute("activeTab", "opensearch");
+        model.addAttribute("queryText", query == null ? "" : query);
         try {
-            model.addAttribute("items", openSearchSampleDataService.listDocuments());
+            model.addAttribute("items", openSearchSampleDataService.listDocuments(query));
         } catch (RuntimeException exception) {
             model.addAttribute("items", List.of());
             model.addAttribute("dbError", "OpenSearch nicht erreichbar oder Seed noch nicht ausgefuehrt.");

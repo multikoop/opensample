@@ -2,6 +2,8 @@ package com.example.opensample.opensearch.service;
 
 import com.example.opensample.opensearch.api.dto.OpenSearchSampleDocumentResponse;
 import com.example.opensample.opensearch.config.OpenSearchSampleProperties;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +27,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -99,13 +100,13 @@ public class OpenSearchSampleDataService {
         }
     }
 
-    public List<OpenSearchSampleDocumentResponse> listDocuments() {
+    public List<OpenSearchSampleDocumentResponse> listDocuments(String queryText) {
         String index = validIndex(properties.getIndex());
         HttpResponse<String> response = send(
                 request("/" + encode(index) + "/_search")
                         .header("Content-Type", "application/json")
                         .header("Accept", "application/json")
-                        .method("POST", HttpRequest.BodyPublishers.ofString(searchPayload(validMaxDocuments(properties.getMaxDocuments()))))
+                        .method("POST", HttpRequest.BodyPublishers.ofString(searchPayload(validMaxDocuments(properties.getMaxDocuments()), queryText)))
                         .build()
         );
 
@@ -134,11 +135,14 @@ public class OpenSearchSampleDataService {
                 ));
             }
 
-            result.sort(Comparator.comparing(OpenSearchSampleDocumentResponse::id, Comparator.nullsLast(String::compareTo)));
             return result;
         } catch (JsonProcessingException exception) {
             throw new IllegalStateException("OpenSearch response could not be parsed", exception);
         }
+    }
+
+    public List<OpenSearchSampleDocumentResponse> listDocuments() {
+        return listDocuments(null);
     }
 
     public boolean isUnavailable(Throwable throwable) {
@@ -253,22 +257,44 @@ public class OpenSearchSampleDataService {
         }
     }
 
-    private String searchPayload(int maxDocuments) {
-        return """
-                {
-                  "size": %d,
-                  "query": {
-                    "match_all": {}
-                  },
-                  "sort": [
-                    {
-                      "timestamp": {
-                        "order": "desc"
-                      }
-                    }
-                  ]
-                }
-                """.formatted(maxDocuments);
+    private String searchPayload(int maxDocuments, String queryText) {
+        ObjectNode root = objectMapper.createObjectNode();
+        root.put("size", maxDocuments);
+
+        String normalizedQuery = normalizeQuery(queryText);
+        if (normalizedQuery == null) {
+            root.set("query", objectMapper.createObjectNode().set("match_all", objectMapper.createObjectNode()));
+            ArrayNode sort = root.putArray("sort");
+            ObjectNode timestampSort = objectMapper.createObjectNode();
+            timestampSort.set("timestamp", objectMapper.createObjectNode().put("order", "desc"));
+            sort.add(timestampSort);
+        } else {
+            ObjectNode queryNode = objectMapper.createObjectNode();
+            ObjectNode multiMatchNode = objectMapper.createObjectNode();
+            multiMatchNode.put("query", normalizedQuery);
+            ArrayNode fields = multiMatchNode.putArray("fields");
+            fields.add("title^3");
+            fields.add("description");
+            fields.add("type");
+            fields.add("location");
+            multiMatchNode.put("operator", "or");
+            queryNode.set("multi_match", multiMatchNode);
+            root.set("query", queryNode);
+        }
+
+        try {
+            return objectMapper.writeValueAsString(root);
+        } catch (JsonProcessingException exception) {
+            throw new IllegalStateException("OpenSearch search payload could not be generated", exception);
+        }
+    }
+
+    private String normalizeQuery(String queryText) {
+        if (queryText == null) {
+            return null;
+        }
+        String normalized = queryText.trim();
+        return normalized.isEmpty() ? null : normalized;
     }
 
     private String validEndpoint(String endpoint) {

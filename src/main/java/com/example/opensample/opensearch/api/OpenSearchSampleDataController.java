@@ -5,6 +5,7 @@ import com.example.opensample.opensearch.service.OpenSearchSampleDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,9 @@ public class OpenSearchSampleDataController {
 
     @GetMapping("/documents")
     @Operation(summary = "List sample OpenSearch documents")
-    public List<OpenSearchSampleDocumentResponse> listDocuments() {
-        return openSearchSampleDataService.listDocuments();
+    public List<OpenSearchSampleDocumentResponse> listDocuments(
+            @RequestParam(name = "q", required = false) String query
+    ) {
+        return openSearchSampleDataService.listDocuments(query);
     }
 }

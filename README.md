@@ -57,6 +57,7 @@ Beispielanwendung mit:
   - `GET /api/v1/kafka/events` listet Events aus dem Sample-Topic
 - OpenSearch API:
   - `GET /api/v1/opensearch/documents` listet Dokumente aus dem Sample-Index
+  - `GET /api/v1/opensearch/documents?q=<suchbegriff>` filtert Dokumente per einfacher Volltextsuche
 
 ## Datenmodell
 
