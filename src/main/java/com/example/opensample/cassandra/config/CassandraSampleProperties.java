@@ -11,6 +11,8 @@ public class CassandraSampleProperties {
     private int port = 9042;
     private String datacenter = "datacenter1";
     private String keyspace = "opensample";
+    private String username = "";
+    private String password = "";
     private long connectTimeoutMs = 3000;
     private long requestTimeoutMs = 5000;
 
@@ -44,6 +46,22 @@ public class CassandraSampleProperties {
 
     public void setKeyspace(String keyspace) {
         this.keyspace = keyspace;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public long getConnectTimeoutMs() {

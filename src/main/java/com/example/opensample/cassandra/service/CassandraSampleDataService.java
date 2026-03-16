@@ -88,11 +88,20 @@ public class CassandraSampleDataService {
                 .withDuration(DefaultDriverOption.REQUEST_TIMEOUT, Duration.ofMillis(properties.getRequestTimeoutMs()))
                 .build();
 
-        return CqlSession.builder()
+        CqlSession.CqlSessionBuilder sessionBuilder = CqlSession.builder()
                 .addContactPoint(new InetSocketAddress(properties.getHost(), properties.getPort()))
                 .withLocalDatacenter(validDatacenter(properties.getDatacenter()))
-                .withConfigLoader(configLoader)
-                .build();
+                .withConfigLoader(configLoader);
+
+        if (hasText(properties.getUsername()) && hasText(properties.getPassword())) {
+            sessionBuilder.withAuthCredentials(properties.getUsername().trim(), properties.getPassword());
+        }
+
+        return sessionBuilder.build();
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
     }
 
     private String createKeyspaceStatement() {

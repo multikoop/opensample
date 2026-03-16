@@ -105,6 +105,9 @@ docker compose up -d mariadb cassandra localstack redpanda opensearch
 # Optional mit OpenSearch Dashboards
 # docker compose up -d opensearch-dashboards
 
+# Optional: Bitnami Cassandra (mit User/Password), startet nur per Profile
+# docker compose --profile bitnami-cassandra up -d cassandra-bitnami
+
 export JAVA_HOME=/opt/homebrew/opt/openjdk@21
 export PATH="$JAVA_HOME/bin:$PATH"
 
@@ -120,6 +123,12 @@ export CASSANDRA_HOST=localhost
 export CASSANDRA_PORT=9042
 export CASSANDRA_DATACENTER=datacenter1
 export CASSANDRA_KEYSPACE=opensample
+
+# Nur fuer bitnami-cassandra (Auth aktiviert)
+# export CASSANDRA_HOST=localhost
+# export CASSANDRA_PORT=9142
+# export CASSANDRA_USER=cassandra
+# export CASSANDRA_PASSWORD=cassandra
 
 # Optional S3 overrides (LocalStack)
 export S3_ENDPOINT=http://localhost:4566

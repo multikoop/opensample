@@ -38,6 +38,29 @@ services:
     volumes:
       - cassandra_data:/var/lib/cassandra
 
+  cassandra-bitnami:
+    image: bitnami/cassandra:${CASSANDRA_BITNAMI_VERSION:-latest}
+    container_name: opensample-cassandra-bitnami
+    restart: unless-stopped
+    profiles: ["bitnami-cassandra"]
+    environment:
+      CASSANDRA_CLUSTER_NAME: ${CASSANDRA_CLUSTER_NAME:-OpenSampleCluster}
+      CASSANDRA_DATACENTER: ${CASSANDRA_DATACENTER:-datacenter1}
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_USER: ${CASSANDRA_USER:-cassandra}
+      CASSANDRA_PASSWORD: ${CASSANDRA_PASSWORD:-cassandra}
+      CASSANDRA_PASSWORD_SEEDER: ${CASSANDRA_PASSWORD_SEEDER:-yes}
+    ports:
+      - "${CASSANDRA_BITNAMI_PORT:-9142}:9042"
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh --username $${CASSANDRA_USER} --password $${CASSANDRA_PASSWORD} --execute 'DESCRIBE KEYSPACES' 127.0.0.1 9042 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 40s
+    volumes:
+      - cassandra_bitnami_data:/bitnami
+
   localstack:
     image: localstack/localstack:${LOCALSTACK_VERSION:-3.8}
     container_name: opensample-localstack
@@ -127,6 +150,7 @@ services:
 volumes:
   mariadb_data:
   cassandra_data:
+  cassandra_bitnami_data:
   localstack_data:
   redpanda_data:
   opensearch_data:
